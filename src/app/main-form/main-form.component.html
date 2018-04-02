@@ -1,0 +1,150 @@
+<div class="card">
+
+  <div class="card-header">
+        Tour settlements
+  </div>
+  <div class="card-body">
+
+
+      <div class="card">
+          <div class="card-header">
+                Add Transaction
+          </div>
+          <div class="card-body">
+            <div class="row">
+            <!-- <label>Transaction</label> -->
+            <div class="col-sm-4">
+              <ng-select [items]="tourists"
+                        bindLabel="name"
+                        bindValue="name"
+                        placeholder="Person"
+                        [(ngModel)]="inputPerson"
+                        [addTag]="addPerson"
+                        [clearable]="true"
+                        [markFirst]="false"
+                        
+                        >
+              </ng-select>
+            </div>
+            <div class="col-sm-3">                <input type="number" class="form-control" placeholder="Amount" [(ngModel)]="inputAmount">            </div>
+            <div class="col-sm-5">                <input type="text" class="form-control" placeholder="Comment" [(ngModel)]="inputComment">            </div>
+
+          </div>  
+          <br>
+          <div class="row">          
+            <div class="col-sm">
+            <ng-select [items]="tourists"
+                      bindLabel="name"
+                      bindValue="name"
+                      placeholder="Beneficiaries"
+                      [(ngModel)]="inputBeneficiaries"
+                      [addTag]="addPerson"
+                      [clearable]="true"
+                      [markFirst]="false"
+                      multiple="true"
+                      >
+            </ng-select>
+            </div>
+            <button type="button" class="btn btn-primary" [disabled]="!inputPerson || !inputAmount || !inputBeneficiaries || !inputBeneficiaries.length" (click)="addSpending()">
+                Add
+                <ng-container *ngIf="inputPerson">
+                  for {{inputPerson}}
+                </ng-container>
+  
+              </button>
+            </div>
+
+
+          </div>
+        </div>
+
+
+      <!-- <p>
+          Selected person : {{selectedPerson|json}}
+      </p>
+
+
+
+      <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="name-label">Add tourist</span>
+          </div>
+          <input type="text" class="form-control" placeholder="Name" aria-label="Username" aria-describedby="name-label" (keyup.enter)="addTourist()"  [(ngModel)]="touristInput">
+        </div> -->
+        
+        <br>
+        <!-- <h6>Spendings</h6> -->
+                
+          <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0" *ngIf="tourists.length">
+          <ng-container *ngFor="let t of tourists;let i=index">
+
+              
+              <ngb-panel *ngIf="t.spendings.length">
+                  <ng-template ngbPanelTitle>
+                      <span> <b>{{t.name}}</b> transactions</span>
+                      <!-- <span class="float-right"><button type="button" class="btn btn-danger" (click)="removeTourist(i)">Remove {{t.name}}</button></span> -->
+                  </ng-template>
+                
+                  <ng-template ngbPanelContent>
+                    <!-- <button type="button" class="btn btn-danger" (click)="removeTourist(i)">Remove {{t.name}}</button>
+                    <button type="button" class="btn btn-primary" (click)="addTransactionForTourist(i)">Add transaction for {{t.name}}</button>
+                    <hr> -->
+                    <table *ngIf="t.spendings.length" class="table table-striped">
+                      <tr>
+                        <th>Amount</th>
+                        <th>Beneficiaries</th>
+                        <th>Comment</th>
+                      </tr>
+                      <tr *ngFor="let sp of t.spendings">
+                        <td>{{sp.amount | currency: 'EUR'}}</td>
+                        <td>{{sp.beneficiaries}}</td>
+                        <td>{{sp.comment}}</td>
+                      </tr>
+                    </table>
+                  </ng-template>
+                </ngb-panel>
+                      
+          </ng-container>
+
+          <ngb-panel *ngIf="touristService.summaries.length">
+              <ng-template ngbPanelTitle>
+                  <span> <b>Summary!</b></span>
+              </ng-template>
+            
+              <ng-template ngbPanelContent>
+
+                <table class="table table-striped">
+                  <tr>
+                    <th>Name</th>
+                    <th>Spent</th>
+                    <th>Received</th>
+                    <th>Balance</th>
+                  </tr>
+                  <tr *ngFor="let sm of touristService.summaries">
+                    <td>{{sm.name}}</td>
+                    <td>{{sm.spent | currency: 'EUR': symbol }}</td>
+                    <td>{{sm.received | currency: 'EUR': symbol}}</td>
+                    <td>{{ - sm.spent + sm.received | currency: 'EUR': symbol}}</td>
+                  </tr>
+                </table>
+
+              </ng-template>
+            </ngb-panel>
+                  
+
+      
+          <!-- <ngb-panel title="Temp">
+            <ng-template ngbPanelContent>
+              Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia
+              aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor,
+            </ng-template>
+        </ngb-panel> -->
+
+      </ngb-accordion>
+
+    <hr>
+    <pre>{{tourists | json}}</pre>
+    <pre>{{touristService.summaries | json}}</pre>
+  </div>
+</div>
+

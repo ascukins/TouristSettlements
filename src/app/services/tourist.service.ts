@@ -7,6 +7,9 @@ export class TouristService {
     persons: Tourist[] = [];
     summaries: TouristSummary[] = [];
 
+    balances: any[] = [];
+    actions: any[] = [];
+
     addPerson( name: string) {
         this.persons.push(
             {
@@ -41,7 +44,7 @@ export class TouristService {
             this.summaries.push({
                 name: name,
                 spent: spent,
-                received: received
+                received: received,
             });
         }
     }
@@ -61,66 +64,92 @@ export class TouristService {
                 }
             }
         }
-        this.summaries.sort( (a, b) => {
-            const aBalance = (a.received - a.spent);
-            const bBalance = (b.received - b.spent);
-            return -(aBalance - bBalance);
-        });
+        this.summaries.sort( (a, b) => (a.received - a.spent) - (b.received - b.spent) );
 
-        
+        this.balances = [];
+        for (const sm of this.summaries ) {
+            this.balances.push({
+                name: sm.name,
+                balance: (sm.received - sm.spent)
+            });
+        }
+        this.actions = [];
+        for ( let positiveBal = 0; positiveBal < this.balances.length; positiveBal++) {
+//          if (this.balances[i].balance > 0) { // has free money
+                for ( let negativeBal = this.balances.length - 1;
+                                                    negativeBal >= 0 && this.balances[positiveBal].balance > 0; negativeBal--) {
+                    if (this.balances[negativeBal].balance < 0) { // needs money
+                        let amnt = 0;
+                        if ( this.balances[positiveBal].balance > - this.balances[negativeBal].balance) {
+                            amnt = - this.balances[negativeBal].balance;
+                        } else {
+                            amnt = this.balances[positiveBal].balance;
+                        }
+                        this.actions.push({
+                            nameFrom: this.balances[positiveBal].name,
+                            nameTo:  this.balances[negativeBal].name,
+                            amount: amnt
+                        });
+                        this.balances[negativeBal].balance += amnt;
+                        this.balances[positiveBal].balance -= amnt;
+
+                    }
+                }
+//          }
+        }
     }
 
 
     constructor() {
-    if (this.persons.length === 0) {
-      this.persons = [
-        {
-          name: 'Alex',
-          spendings: [
-            {
-              amount: 300,
-              comment: 'For transport',
-              beneficiaries: [
-                'Alex', 'Nino', 'Rito'
-              ]
-            }
-          ]
+    // if (this.persons.length === 0) {
+    //   this.persons = [
+    //     {
+    //       name: 'Alex',
+    //       spendings: [
+    //         {
+    //           amount: 300,
+    //           comment: 'For transport',
+    //           beneficiaries: [
+    //             'Alex', 'Nino', 'Rito'
+    //           ]
+    //         }
+    //       ]
 
-        },
-        {
-          name: 'Nino',
-          spendings: [
-            {
-                amount: 20,
-                comment: 'Food',
-                beneficiaries: [
-                  'Nino', 'Rito'
-                ]
-            },
-            {
-                amount: 30,
-                comment: 'Museum',
-                beneficiaries: [
-                  'Alex', 'Nino', 'Rito'
-                ]
-              }
-            ]
-        },
-        {
-          'name': 'Tinka',
-          'spendings': [
-            {
-              'amount': 500,
-              'comment': 'hyhh',
-              'beneficiaries': [
-                'Alex',
-                'Nino'
-              ]
-            }
-          ]
-        }
-      ];
-    }
+    //     },
+    //     {
+    //       name: 'Nino',
+    //       spendings: [
+    //         {
+    //             amount: 20,
+    //             comment: 'Food',
+    //             beneficiaries: [
+    //               'Nino', 'Rito'
+    //             ]
+    //         },
+    //         {
+    //             amount: 30,
+    //             comment: 'Museum',
+    //             beneficiaries: [
+    //               'Alex', 'Nino', 'Rito'
+    //             ]
+    //           }
+    //         ]
+    //     },
+    //     {
+    //       'name': 'Tinka',
+    //       'spendings': [
+    //         {
+    //           'amount': 500,
+    //           'comment': 'hyhh',
+    //           'beneficiaries': [
+    //             'Alex',
+    //             'Nino'
+    //           ]
+    //         }
+    //       ]
+    //     }
+    //   ];
+    // }
 
 
     }

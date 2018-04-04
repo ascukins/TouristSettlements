@@ -14,5 +14,6 @@ export interface TouristSummary {
     name: string;
     spent: number;
     received: number;
+//    balance: number;
 }
 

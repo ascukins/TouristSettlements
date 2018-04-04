@@ -1,7 +1,7 @@
 <div class="card">
 
   <div class="card-header">
-        Tour settlements
+        Friendly settlements
   </div>
   <div class="card-body">
 
@@ -94,11 +94,13 @@
                         <th>Amount</th>
                         <th>Beneficiaries</th>
                         <th>Comment</th>
+                        <th> </th>
                       </tr>
-                      <tr *ngFor="let sp of t.spendings">
+                      <tr *ngFor="let sp of t.spendings; let i = index">
                         <td>{{sp.amount | currency: 'EUR'}}</td>
                         <td>{{sp.beneficiaries}}</td>
                         <td>{{sp.comment}}</td>
+                        <td style="width: 10px"> <button type="button" class="btn btn-danger" (click)="t.spendings.splice(i,1); touristService.recalcSummaries();">X</button> </td>
                       </tr>
                     </table>
                   </ng-template>
@@ -124,10 +126,16 @@
                     <td>{{sm.name}}</td>
                     <td>{{sm.spent | currency: 'EUR': symbol }}</td>
                     <td>{{sm.received | currency: 'EUR': symbol}}</td>
-                    <td>{{ - sm.spent + sm.received | currency: 'EUR': symbol}}</td>
+                    <td>{{ sm.received - sm.spent | currency: 'EUR': symbol}}</td>
                   </tr>
                 </table>
 
+                <ng-container>
+                  <ul>
+                      <li  *ngFor="let a of touristService.actions">{{a.nameFrom}} pays to {{a.nameTo}} amount of {{a.amount | currency: 'EUR'}}</li>
+                  </ul>
+                </ng-container>
+                    
               </ng-template>
             </ngb-panel>
                   
@@ -141,10 +149,13 @@
         </ngb-panel> -->
 
       </ngb-accordion>
-
+<!-- 
     <hr>
     <pre>{{tourists | json}}</pre>
     <pre>{{touristService.summaries | json}}</pre>
+    <pre>{{touristService.balances | json}}</pre>
+    <pre>{{touristService.actions | json}}</pre> -->
+
   </div>
 </div>
 
